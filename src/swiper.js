@@ -35,14 +35,15 @@
       duration: 300,
       allowScroll: false,
       debounce: true,
+      initialSlide: 0,
     };
     this._options = extend(this._default, options);
     this._start = {};
     this._move = {};
     this._end = {};
-    this._prev = 0;
-    this._current = 0;
-    this._offset = 0;
+    this._prev = null;
+    this._current = null;
+    this._offset = null;
     this._goto = -1;
     this._swiping = false;
     this._scrolling = false;
@@ -62,6 +63,7 @@
 
     this._init();
     this._bind();
+    this.go(this._options.initialSlide, true);
   }
 
   /**
@@ -222,7 +224,7 @@
      * @param index
      * @private
      */
-  Swiper.prototype._show = function(index) {
+  Swiper.prototype._show = function(index, quiet) {
     this._offset = index * this._height;
     var transform = 'translate3d(0, -' + this._offset + 'px, 0)';
 
@@ -231,8 +233,7 @@
       transform = 'translate3d(-' + this._offset + 'px, 0, 0)';
     }
 
-    var duration = this._options.duration + 'ms';
-
+    var duration = (quiet ? 1 : this._options.duration) + 'ms';
     this.$container.style['-webkit-transition'] = duration;
     this.$container.style.transition = duration;
     this.$container.style['-webkit-transform'] = transform;
@@ -257,7 +258,7 @@
   /**
      * goto x page
      */
-  Swiper.prototype.go = function(index) {
+  Swiper.prototype.go = function(index, quiet) {
     if (index < 0 || index > this.count - 1 || index === this._current) {
       return;
     }
@@ -271,7 +272,7 @@
     }
 
     this._goto = index;
-    this._show(this._current);
+    this._show(this._current, quiet);
 
     return this;
   };

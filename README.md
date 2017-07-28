@@ -98,6 +98,8 @@
 
 - `debounce`: Boolean，是否允许回弹效果，默认值`true`
 
+- `initialSlide`: Number，初始位置，默认值`0`
+
 
 ###事件
 
